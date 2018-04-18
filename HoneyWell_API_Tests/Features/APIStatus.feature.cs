@@ -73,7 +73,7 @@ namespace HoneyWell_API_Tests.Features
 #line 5
 this.ScenarioSetup(scenarioInfo);
 #line 6
-testRunner.Given(string.Format("The credentials for post type are \"{0}\", \"{1}\" and \"{2}\"", username, password, grant_Type), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+testRunner.Given(string.Format("The credentials for \"{0}\" type are \"{1}\", \"{2}\" and \"{3}\"", type, username, password, grant_Type), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 7
 testRunner.And(string.Format("I want to know the Status Code of the api with \"{0}\" and \"{1}\"", type, url), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 8

@@ -24,27 +24,47 @@ namespace HoneyWell_API_Tests.Step_Definitions
         #region --- BDD Conditions---
 
         #region @Given
-        [Given(@"The credentials for post type are ""(.*)"", ""(.*)"" and ""(.*)""")]
-        public void GivenTheCredentialsForPostTypeAreAnd(string username, string password, string grant_type)
+
+        [Given(@"The credentials for ""(.*)"" type are ""(.*)"", ""(.*)"" and ""(.*)""")]
+        public void GivenTheCredentialsForTypeAreAnd(string type, string username, string password, string grant_type)
         {
             try
             {
-                if (!username.Equals(""))
+                switch (type.ToUpper())
                 {
-                    reportTest = "Username : " + username;
-                    authParams = new AuthenticationParameters();
-                    authParams.UserName = username;
-                    //authParams.Password = Encryption.EncodePasswordToBase64(password);
-                    authParams.Password = password;
-                    authParams.Grant_Type = grant_type;
+                    case "POST":
+                        reportTest = "Username : " + username;
+                        authParams = new AuthenticationParameters();
+                        authParams.UserName = username;
+                        //authParams.Password = Encryption.EncodePasswordToBase64(password);
+                        authParams.Password = password;
+                        authParams.Grant_Type = grant_type;
+                        break;
+                    case "GET":
+                        break;
+                    case "UPDATE":
+                        break;
+                    case "DELETE":
+                        break;
+                    case "PATCH":
+                        reportTest = "Username : " + username;
+                        authParams = new AuthenticationParameters();
+                        authParams.UserName = username;
+                        //authParams.Password = Encryption.EncodePasswordToBase64(password);
+                        authParams.Password = password;
+                        authParams.Grant_Type = grant_type;
+                        break;
+                    default:
+                        break;
                 }
+              
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ExtentReportsHelper.PrintException(test, e);
             }
         }
-       
+
         [Given(@"I want to know the Status Code of the api with ""(.*)"" and ""(.*)""")]
         public void GivenIWantToKnowTheStatusCodeOfTheApiWithAnd(string type, string url)
         {
@@ -68,7 +88,8 @@ namespace HoneyWell_API_Tests.Step_Definitions
                         restRequest = APIHelperMethods.RequestDELETEAPI(ref restClient, restRequest, url, test);
                         break;
                     case "PATCH":
-                        restRequest = APIHelperMethods.RequestPATCHAPI(ref restClient, restRequest, url, test);
+                        string json_patch = JsonConvert.SerializeObject(authParams);
+                        restRequest = APIHelperMethods.RequestPATCHAPI(ref restClient, restRequest, url, json_patch, test);
                         break;
                     default:
                         break;

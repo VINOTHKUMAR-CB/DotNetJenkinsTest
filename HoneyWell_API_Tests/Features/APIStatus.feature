@@ -3,7 +3,7 @@
 
 @Api
 Scenario Outline: Status Code of API Request
-Given The credentials for post type are "<Username>", "<Password>" and "<Grant_Type>"
+Given The credentials for "<type>" type are "<Username>", "<Password>" and "<Grant_Type>"
 And I want to know the Status Code of the api with "<type>" and "<url>"
 When I hit the request on the api
 Then the system should return <status_code>

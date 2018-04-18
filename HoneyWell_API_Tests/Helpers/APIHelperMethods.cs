@@ -84,12 +84,15 @@ namespace HoneyWell_API_Tests.Helpers
         }
 
         //Sends request to Patch API
-        public static RestRequest RequestPATCHAPI(ref RestClient restClient, RestRequest restRequest, string url, ExtentTest test)
+        public static RestRequest RequestPATCHAPI(ref RestClient restClient, RestRequest restRequest, string url, string jsonBody, ExtentTest test)
         {
+
             try
             {
                 restClient = new RestClient(url);
+                Console.WriteLine("Request Type of API : PATCH");
                 restRequest = new RestRequest(Method.PATCH);
+                restRequest.AddParameter("application/json-patch+json", jsonBody, ParameterType.RequestBody);
             }
             catch (Exception e)
             {
@@ -97,7 +100,6 @@ namespace HoneyWell_API_Tests.Helpers
             }
 
             return restRequest;
-
         }
 
         //Returns the Status Code of the API
