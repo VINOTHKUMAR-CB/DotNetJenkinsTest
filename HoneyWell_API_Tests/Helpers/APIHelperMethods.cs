@@ -1,9 +1,10 @@
 ﻿using AventStack.ExtentReports;
 using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.Net;
 
-namespace HoneyWell_API_Tests.Helpers
+namespace HoneyWellAPITests.Helpers
 {
     public class APIHelperMethods
     {
@@ -19,7 +20,6 @@ namespace HoneyWell_API_Tests.Helpers
             try
             {
                 restClient = new RestClient(url);
-                Console.WriteLine("Request Type of API : POST");
                 restRequest = new RestRequest(Method.POST);
                 restRequest.AddParameter("application/json", jsonBody, ParameterType.RequestBody);
             }
@@ -38,7 +38,6 @@ namespace HoneyWell_API_Tests.Helpers
             try
             {
                 restClient = new RestClient(url);
-                Console.WriteLine("Request Type of API : GET");
                 restRequest = new RestRequest(Method.GET);
             }
             catch (Exception e)
@@ -51,12 +50,13 @@ namespace HoneyWell_API_Tests.Helpers
         }
      
         //Sends request to Update API
-        public static RestRequest RequestUPDATEAPI(ref RestClient restClient, RestRequest restRequest, string url, ExtentTest test)
+        public static RestRequest RequestUPDATEAPI(ref RestClient restClient, RestRequest restRequest, string url, string jsonBody, ExtentTest test)
         {
             try
             {
                 restClient = new RestClient(url);
                 restRequest = new RestRequest(Method.PUT);
+                restRequest.AddParameter("application/json", jsonBody, ParameterType.RequestBody);
             }
             catch (Exception e)
             {
@@ -90,7 +90,6 @@ namespace HoneyWell_API_Tests.Helpers
             try
             {
                 restClient = new RestClient(url);
-                Console.WriteLine("Request Type of API : PATCH");
                 restRequest = new RestRequest(Method.PATCH);
                 restRequest.AddParameter("application/json-patch+json", jsonBody, ParameterType.RequestBody);
             }
@@ -109,8 +108,10 @@ namespace HoneyWell_API_Tests.Helpers
             try
             {
                 HttpStatusCode statusCode = restResponse.StatusCode;
+                string statusDesc = restResponse.StatusDescription;
                 numericStatusCode = (int)statusCode;
-                Console.WriteLine("Status Code = " + numericStatusCode);
+                ExtentReportsHelper.LogMessage(test, "Status Code = " + numericStatusCode + " -> Status Message = " + statusDesc);
+
             }
             catch (Exception e)
             {
@@ -126,8 +127,7 @@ namespace HoneyWell_API_Tests.Helpers
             try
             {
                 string json = restResponse.Content;
-                LogTraceListener.LastGherkinMessage = LogTraceListener.LastGherkinMessage + " \r\nJSON RESPONSE : " + json;
-                Console.WriteLine(json);
+                ExtentReportsHelper.LogMessage(test, " \r\nJSON RESPONSE : " + json);
             }
             catch (Exception e)
             {
@@ -135,6 +135,25 @@ namespace HoneyWell_API_Tests.Helpers
             }
 
         }
+
+        //Gets ouput json object
+        public static List<T> OutputJsonResponse<T>(IRestResponse restResponse, ExtentTest test)
+        {
+            List<T> objOutputParams = default(List<T>);
+            try
+            {
+                string json = restResponse.Content;
+                objOutputParams = JSONHelperMethods.DeserializeJson<List<T>>(json);
+                ExtentReportsHelper.LogMessage(test, " \r\nJSON RESPONSE : " + json);
+                return objOutputParams;
+            }
+            catch (Exception e)
+            {
+                ExtentReportsHelper.PrintException(test, e);
+            }
+            return objOutputParams;
+        }
+
         #endregion
     }
 }

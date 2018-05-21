@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoneyWell_API_Tests", "HoneyWell_API_Tests\HoneyWell_API_Tests.csproj", "{AB7525E9-7C3B-4A2F-ACA6-AD961B47E0CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoneyWellAPITests", "HoneyWell_API_Tests\HoneyWellAPITests.csproj", "{AB7525E9-7C3B-4A2F-ACA6-AD961B47E0CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

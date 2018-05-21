@@ -1,10 +1,11 @@
-﻿namespace HoneyWell_API_Tests.Globals
+﻿using System;
+
+namespace HoneyWellAPITests.Globals
 {
     public class Constants
     {
         public const int DefaultTimeout = 30;
-        public const string ReportingFolder = @"C:\Reports\";
-        public const string ReportingImagesFolder = ReportingFolder + @"images\";
-
+        public static string ReportingFolder = Environment.CurrentDirectory.Replace("\\TestResults", "\\Reports\\");
+        public const string JsonFolderName = "\\JsonInputFiles\\";
     }
 }

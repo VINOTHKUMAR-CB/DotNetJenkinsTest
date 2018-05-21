@@ -1,7 +1,7 @@
 ﻿using AventStack.ExtentReports;
 using NUnit.Framework;
 
-namespace HoneyWell_API_Tests.Helpers
+namespace HoneyWellAPITests.Helpers
 {
     public class OTAAssert
     {
@@ -9,32 +9,37 @@ namespace HoneyWell_API_Tests.Helpers
         #region ---Methods---
 
         //Asserts if the condition is True
-        public static void AssertTrue(ExtentTest extentTest, bool assertedValue, string reportingMessage)
+        public static void AssertTrue(ExtentTest extentTest, bool assertedValue)
         {
             try
             {
                 Assert.IsTrue(assertedValue);
-                extentTest.Pass(reportingMessage);
+                LogTraceListener.TestStatusMessage = "Value = " + assertedValue;
+                ExtentReportsHelper.PassMessage(extentTest, LogTraceListener.TestStatusMessage);
             }
             catch (AssertionException)
             {
-                extentTest.Fail("TEST FAILED : Expected TRUE but found " + assertedValue);
+                LogTraceListener.TestStatusMessage = "TEST FAILED : Expected TRUE but found " + assertedValue;
+                ExtentReportsHelper.FailMessage(extentTest, LogTraceListener.TestStatusMessage);
             }
         }
 
         //Asserts if actual value if equal to the expected value
-        public static void AssertEquals(ExtentTest extentTest, int actualValue, int expectedValue, string reportingMessage)
+        public static void AssertEquals(ExtentTest extentTest, object actualValue, object expectedValue, string message)
         {
             try
             {
-                Assert.AreEqual(expectedValue, actualValue);
-                extentTest.Pass(reportingMessage);
+                Assert.AreEqual(expectedValue, actualValue, message);
+                LogTraceListener.TestStatusMessage = message;
+                ExtentReportsHelper.PassMessage(extentTest, LogTraceListener.TestStatusMessage);
             }
             catch (AssertionException)
             {
-                extentTest.Fail("TEST FAILED : Expected = " + expectedValue + " but found " + actualValue);              
+                LogTraceListener.TestStatusMessage = "TEST FAILED : Expected = " + expectedValue + " but found " + actualValue;
+                ExtentReportsHelper.FailMessage(extentTest, LogTraceListener.TestStatusMessage);
             }
         }
+
         #endregion
     }
 }

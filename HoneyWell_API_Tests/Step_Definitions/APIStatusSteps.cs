@@ -1,12 +1,12 @@
 ﻿using AventStack.ExtentReports;
-using HoneyWell_API_Tests.DataFields;
-using HoneyWell_API_Tests.Helpers;
+using HoneyWellAPITests.DataFields;
+using HoneyWellAPITests.Helpers;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
 using TechTalk.SpecFlow;
 
-namespace HoneyWell_API_Tests.Step_Definitions
+namespace HoneyWellAPITests.Step_Definitions
 {
     [Binding]
     public class APIStatusSteps
@@ -17,14 +17,15 @@ namespace HoneyWell_API_Tests.Step_Definitions
         private IRestResponse restResponse;
 
         private ExtentTest test = ScenarioContext.Current.Get<ExtentTest>();
-        private AuthenticationParameters authParams;
+        private PostAuthParams authParams;
         private string reportTest;
         #endregion
 
         #region --- BDD Conditions---
 
-        #region @Given
+        #region TC01
 
+        #region @Given
         [Given(@"The credentials for ""(.*)"" type are ""(.*)"", ""(.*)"" and ""(.*)""")]
         public void GivenTheCredentialsForTypeAreAnd(string type, string username, string password, string grant_type)
         {
@@ -34,11 +35,12 @@ namespace HoneyWell_API_Tests.Step_Definitions
                 {
                     case "POST":
                         reportTest = "Username : " + username;
-                        authParams = new AuthenticationParameters();
+                        authParams = new PostAuthParams();
                         authParams.UserName = username;
                         //authParams.Password = Encryption.EncodePasswordToBase64(password);
                         authParams.Password = password;
                         authParams.Grant_Type = grant_type;
+                        JSONHelperMethods.WriteToJsonFile(ScenarioContext.Current.ScenarioInfo.Title, authParams, test);
                         break;
                     case "GET":
                         break;
@@ -48,7 +50,7 @@ namespace HoneyWell_API_Tests.Step_Definitions
                         break;
                     case "PATCH":
                         reportTest = "Username : " + username;
-                        authParams = new AuthenticationParameters();
+                        authParams = new PostAuthParams();
                         authParams.UserName = username;
                         //authParams.Password = Encryption.EncodePasswordToBase64(password);
                         authParams.Password = password;
@@ -70,19 +72,21 @@ namespace HoneyWell_API_Tests.Step_Definitions
         {
             try
             {
-                LogTraceListener.LastGherkinMessage = type + " API : " + url + " | \r\n" + reportTest;
+                ExtentReportsHelper.LogMessage(test, type + " API : " + url);
+                ExtentReportsHelper.LogMessage(test, reportTest);
 
                 switch (type.ToUpper())
                 {
                     case "POST":
-                        string json = JsonConvert.SerializeObject(authParams);
-                        restRequest = APIHelperMethods.RequestPOSTAPI(ref restClient, restRequest, url, json, test);
+                        string json_post = JsonConvert.SerializeObject(authParams);
+                        restRequest = APIHelperMethods.RequestPOSTAPI(ref restClient, restRequest, url, json_post, test);
                         break;
                     case "GET":
                         restRequest = APIHelperMethods.RequestGETAPI(ref restClient, restRequest, url, test);
                         break;
                     case "UPDATE":
-                        restRequest = APIHelperMethods.RequestUPDATEAPI(ref restClient, restRequest, url, test);
+                        string json_put = JsonConvert.SerializeObject(authParams);
+                        restRequest = APIHelperMethods.RequestUPDATEAPI(ref restClient, restRequest, url, json_put, test);
                         break;
                     case "DELETE":
                         restRequest = APIHelperMethods.RequestDELETEAPI(ref restClient, restRequest, url, test);
@@ -105,8 +109,9 @@ namespace HoneyWell_API_Tests.Step_Definitions
         #endregion
 
         #region @When
-        [When(@"I hit the request on the api")]
-        public void WhenIHitTheRequestOnTheApi()
+       
+        [When(@"ScenarioOld_I hit the request on the api")]
+        public void WhenScenarioOld_IHitTheRequestOnTheApi()
         {
             try
             {
@@ -117,6 +122,7 @@ namespace HoneyWell_API_Tests.Step_Definitions
                 ExtentReportsHelper.PrintException(test, e);
             }
         }
+
         #endregion
 
         #region @Then
@@ -126,7 +132,7 @@ namespace HoneyWell_API_Tests.Step_Definitions
             try
             {
                 int numericStatusCode = APIHelperMethods.StatusCode(restResponse,test);
-
+                PostAuthParams param = JSONHelperMethods.ReadFromJsonFile<PostAuthParams>(ScenarioContext.Current.ScenarioInfo.Title);
                 if (numericStatusCode == expectedCode)
                 {
                     APIHelperMethods.SaveJSONResponse(restResponse,test);
@@ -142,5 +148,8 @@ namespace HoneyWell_API_Tests.Step_Definitions
         #endregion
 
         #endregion
+
+        #endregion TC01
+
     }
 }

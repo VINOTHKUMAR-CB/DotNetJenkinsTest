@@ -1,13 +1,10 @@
 ﻿using AventStack.ExtentReports;
 using AventStack.ExtentReports.Reporter;
 using AventStack.ExtentReports.Reporter.Configuration;
-using HoneyWell_API_Tests.Globals;
-using HoneyWell_API_Tests.Helpers;
-using NUnit.Framework;
-using NUnit.Framework.Interfaces;
+using HoneyWellAPITests.Globals;
 using TechTalk.SpecFlow;
 
-namespace HoneyWell_API_Tests.Step_Definitions
+namespace HoneyWellAPITests.Step_Definitions
 {
     [Binding]
     public class SetupAndTeardownSteps
@@ -42,29 +39,35 @@ namespace HoneyWell_API_Tests.Step_Definitions
         [AfterScenario]
         public static void WriteTestDescription()
         {
-            extentTest.Info(LogTraceListener.LastGherkinMessage);
-            ScenarioContext.Current.Set<ExtentTest>(extentTest);
+            #region @NUnit marking all tests as Inconclusive
+            //var status = TestContext.CurrentContext.Result.Outcome.Status;
+            ////Status logStatus;
+            //switch (status)
+            //{
+            //    case TestStatus.Passed:
+            //        //logStatus = Status.Pass;
+            //        extentTest.Pass(LogTraceListener.TestStatusMessage);
+            //        break;
+            //    case TestStatus.Failed:
+            //        //logStatus = Status.Fail;
+            //        extentTest.Fail(LogTraceListener.TestStatusMessage);
 
-            var status = TestContext.CurrentContext.Result.Outcome.Status;
-            Status logStatus;
-            switch (status)
-            {
-                case TestStatus.Passed:
-                    logStatus = Status.Pass;
-                    break;
-                case TestStatus.Failed:
-                    logStatus = Status.Fail;
-                    break;
-                case TestStatus.Inconclusive:
-                    logStatus = Status.Warning;
-                    break;
-                case TestStatus.Skipped:
-                    logStatus = Status.Skip;
-                    break;
-                default:
-                    logStatus = Status.Info;
-                    break;
-            }
+            //        break;
+            //    case TestStatus.Inconclusive:
+            //        //logStatus = Status.Warning;
+            //        extentTest.Warning(LogTraceListener.TestStatusMessage);
+            //        break;
+            //    case TestStatus.Skipped:
+            //        //logStatus = Status.Skip;
+            //        extentTest.Skip(LogTraceListener.TestStatusMessage);
+            //        break;
+            //    default:
+            //        //logStatus = Status.Info;
+            //        extentTest.Info(LogTraceListener.TestStatusMessage);
+            //        break;
+            //}
+            #endregion
+
             ScenarioContext.Current.Clear();
         }
 
